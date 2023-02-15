@@ -6,7 +6,6 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { db_CONNECT } = require("./db/connect");
 const errorHandler = require("./middleware/errorMiddleware");
-const colors = require("colors");
 const userRoute = require("./routes/userRoute");
 const uploadRoute = require("./routes/uploadRoute");
 const path = require("path");
@@ -50,5 +49,5 @@ db_CONNECT();
 // server connection
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-  console.log(`Server Running on port ${PORT}`.green.bold);
+  console.log(`Server Running on port ${PORT}`);
 });

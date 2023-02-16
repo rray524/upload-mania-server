@@ -1,20 +1,20 @@
 const asyncHandler = require("express-async-handler");
 const Upload = require("../models/uploadModel");
 
-// get uploaded files
+//**************** */ get uploaded files
 
 const saveFile = asyncHandler(async (req, res) => {
   const allFiles = await Upload.find({ user: req.user.id });
   res.status(200).json(allFiles);
 });
 
-// create a new file
+//*************** */ create a new file
 
 const createFile = asyncHandler(async (req, res) => {
   const files = req.file.filename;
 
-  console.log(files);
-  console.log(req.body);
+  // console.log(files);
+  // console.log(req.body);
 
   await Upload.create({
     user: req.user.id,
@@ -28,7 +28,7 @@ const createFile = asyncHandler(async (req, res) => {
     .catch((err) => console.log(err));
 });
 
-// delete a file
+//***************** */ delete a file
 const deleteFile = asyncHandler(async (req, res) => {
   const file = await Upload.findById(req.params.id);
   // if file doesnt exist
@@ -36,7 +36,7 @@ const deleteFile = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("File not found");
   }
-  // Match product to its user
+  // Match files to its user
   if (file.user.toString() !== req.user.id) {
     res.status(401);
     throw new Error("User not authorized");
@@ -45,8 +45,40 @@ const deleteFile = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "File deleted." });
 });
 
+// ************** update file
+
+const updateFile = asyncHandler(async (req, res) => {
+  const file = req.file.filename;
+  const files = await Upload.findById(req.params.id);
+  const { id } = req.params;
+  console.log(files, id);
+  // if file doesnt exist
+  if (!files) {
+    res.status(404);
+    throw new Error("File not found");
+  }
+  // Match product to its user
+  if (files.user.toString() !== req.user.id) {
+    res.status(401);
+    throw new Error("User not authorized");
+  }
+  // Update File
+  const updatedFile = await Upload.findByIdAndUpdate(
+    { _id: id },
+    {
+      files: file,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  res.status(200).json(updatedFile);
+});
+
 module.exports = {
   saveFile,
   createFile,
   deleteFile,
+  updateFile,
 };

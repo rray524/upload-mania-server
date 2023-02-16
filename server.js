@@ -34,6 +34,7 @@ app.use("/api/user", userRoute);
 app.use("/api/get", uploadRoute);
 app.use("/api/save", uploadRoute);
 app.use("/api/delete", uploadRoute);
+app.use("/api/edit", uploadRoute);
 
 // Routes
 app.get("/", (req, res) => {
